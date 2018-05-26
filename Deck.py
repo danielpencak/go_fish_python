@@ -6,6 +6,9 @@ class Deck:
     def __init__(self):
         self.deck = []
 
+    def reset(self):
+        self.deck = []
+
     def shuffle_deck(self):
         'returns a shuffled deck'
 
