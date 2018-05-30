@@ -3,10 +3,8 @@ from Game import Game
 import random
 
 # create new Deck and Game instances and setup shuffled deck
-
 Deck = Deck()
 deck = Deck.shuffle_deck()
-print(len(deck))
 Game = Game(deck)
 
 # select who will go first
