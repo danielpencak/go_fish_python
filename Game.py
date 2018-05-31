@@ -43,21 +43,59 @@ class Game(Deck):
             self.player_hand.append(self.deal_card())
             self.computer_hand.append(self.deal_card())
 
-    def check_for_pairs(self, card_to_check, player):
-        if player == 'computer':
+    def check_for_pairs(self, player, card_to_check = None):
+        if player == 'computer' and card_to_check != None:
             for card in self.player_hand:
-                if card[1] == card_to_check[1]:
+                if card[1] == card_to_check:
                     self.player_hand.remove(card)
-                    self.computer_hand.remove(card_to_check)
+                    for card in self.computer_hand:
+                        if card[1] == card_to_check:
+                            self.computer_hand.remove(card)
+                    return True
+            return False
+        elif (player == 'player' and card_to_check != None):
+            for card in self.computer_hand:
+                if card[1] == card_to_check:
+                    self.computer_hand.remove(card)
+                    for card in self.player_hand:
+                        if card[1] == card_to_check:
+                            self.player_hand.remove(card)
                     return True
             return False
         else:
-            for card in self.computer_hand:
-                if card[1] == card_to_check[1]:
-                    self.computer_hand.remove(card)
-                    self.player_hand.remove(card_to_check)
-                    return True
-            return False
+            if player == 'computer':
+                indexes_to_remove = []
+
+                for card_index in range(0, len(self.computer_hand)):
+                    if card_index < len(self.computer_hand) - 1:
+                        for card_index2 in range(card_index + 1, len(self.computer_hand)):
+                            if self.computer_hand[card_index][1] == self.computer_hand[card_index2][1]:
+                                indexes_to_remove.append(card_index)
+                                indexes_to_remove.append(card_index2)
+                                # self.computer_hand.remove(self.computer_hand[card_index])
+                                # self.computer_hand.remove(self.computer_hand[card_index2])
+                indexes_to_remove_sort = sorted(indexes_to_remove, key=int)
+                for card_remove_index in reversed(indexes_to_remove_sort):
+                    print(card_remove_index)
+                    card_to_remove = self.computer_hand[card_remove_index]
+                    self.computer_hand.remove(card_to_remove)
+            elif player == 'player':
+                indexes_to_remove = []
+
+                for card_index in range(0, len(self.player_hand)):
+                    if card_index < len(self.player_hand) - 1:
+                        for card_index2 in range(card_index + 1, len(self.player_hand)):
+                            if self.player_hand[card_index][1] == self.player_hand[card_index2][1]:
+                                indexes_to_remove.append(card_index)
+                                indexes_to_remove.append(card_index2)
+                                # self.computer_hand.remove(self.computer_hand[card_index])
+                                # self.computer_hand.remove(self.computer_hand[card_index2])
+                indexes_to_remove_sort = sorted(indexes_to_remove, key=int)
+                print(indexes_to_remove_sort)
+                for card_remove_index in reversed(indexes_to_remove_sort):
+                    print(card_remove_index)
+                    card_to_remove = self.player_hand[card_remove_index]
+                    self.player_hand.remove(card_to_remove)
 
     def refill_hand(self, player):
         if player == 'computer':
@@ -79,7 +117,9 @@ class Game(Deck):
             if pair_check:
                 if len(self.computer_hand) == 0:
                     self.refill_hand(player)
-                self.go_fish(player)
+                # self.go_fish(player)
+            else:
+                self.computer_hand.append(dealt_card)
         else:
             dealt_card = self.deal_card()
             pair_check = self.check_for_pairs(dealt_card, player)
@@ -87,4 +127,5 @@ class Game(Deck):
             if pair_check:
                 if len(self.player_hand) == 0:
                     self.refill_hand(player)
-                self.go_fish(player)
+            else:
+                self.player_hand.append(dealt_card)
